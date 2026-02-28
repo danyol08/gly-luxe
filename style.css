@@ -541,14 +541,15 @@
   }
   
   .about-detail-card {
-    position: absolute;
-    bottom: -1.2rem;
-    right: -0.5rem;
+  position: relative;
+  bottom: auto;
+  right: auto;
+  margin-top: 1rem;
     padding: 1rem 1.3rem;
     border-radius: 18px;
-    background: rgba(253, 250, 247, 0.96);
-    box-shadow: 0 10px 30px rgba(139, 107, 92, 0.25);
-    max-width: 260px;
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-subtle);
+  max-width: 100%;
   }
 
 .about-image-placeholder {
@@ -1217,9 +1218,9 @@
       grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
     }
   
-    .contact-container {
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-    }
+  .contact-container {
+    grid-template-columns: minmax(0, 1fr);
+  }
   
     .services-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));

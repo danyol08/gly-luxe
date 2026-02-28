@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const lightbox = document.getElementById("lightbox");
     const lightboxImg = lightbox ? lightbox.querySelector(".lightbox-image") : null;
     const lightboxClose = lightbox ? lightbox.querySelector(".lightbox-close") : null;
-    const contactForm = document.getElementById("contact-form");
-    const formStatus = document.getElementById("form-status");
+  const contactForm = document.getElementById("contact-form");
+  const formStatus = document.getElementById("form-status");
   
   /* Page Loader with fallback timeout */
   function hideLoader() {
@@ -118,27 +118,5 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
   
-    /* Contact form (frontend-only simulation) */
-    if (contactForm && formStatus) {
-      contactForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-  
-        const name = contactForm.querySelector("#name");
-        const phone = contactForm.querySelector("#phone");
-        const service = contactForm.querySelector("#service");
-  
-        if (!name.value.trim() || !phone.value.trim() || !service.value) {
-          formStatus.textContent = "Please fill in your name, contact number, and preferred service.";
-          formStatus.classList.remove("success");
-          formStatus.classList.add("error");
-          return;
-        }
-  
-        formStatus.textContent = "Thank you, your appointment request has been received. We’ll reach out to confirm your schedule.";
-        formStatus.classList.remove("error");
-        formStatus.classList.add("success");
-  
-        contactForm.reset();
-      });
-    }
+  /* Contact form removed – bookings handled via Facebook and phone */
   });
