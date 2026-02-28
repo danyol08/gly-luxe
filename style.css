@@ -1042,12 +1042,12 @@
   .footer-container {
     padding: 2.2rem 0 1.4rem;
     display: grid;
-    gap: 2rem;
+    gap: 1rem;
   }
   
-  .footer-brand {
+  /* .footer-brand {
     max-width: 260px;
-  }
+  } */
   
   .footer-logo {
     font-family: var(--font-script);
