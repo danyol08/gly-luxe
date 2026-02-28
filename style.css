@@ -1158,16 +1158,20 @@
     }
   
     .hero-container {
-      grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     }
   
     .hero {
       padding-top: 4.5rem;
     }
   
-    .hero-image-secondary {
-      display: none;
-    }
+  .hero-visual {
+    display: none;
+  }
+
+  .hero-content {
+    text-align: left;
+  }
   
   .section {
     padding: 3.8rem 0;
