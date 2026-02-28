@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const header = document.querySelector(".site-header");
     const navToggle = document.querySelector(".nav-toggle");
     const navLinks = document.querySelector(".nav-links");
-    const heroCta = document.querySelector(".btn-primary");
+  const heroCta = document.querySelector(".btn-primary");
     const revealElements = document.querySelectorAll(".reveal");
     const lightbox = document.getElementById("lightbox");
     const lightboxImg = lightbox ? lightbox.querySelector(".lightbox-image") : null;
@@ -35,16 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
     updateHeaderShadow();
     window.addEventListener("scroll", updateHeaderShadow);
   
-    /* Smooth scroll for hero CTA (explicitly to contact) */
-    if (heroCta) {
-      heroCta.addEventListener("click", function (event) {
-        const target = document.querySelector("#contact");
-        if (target) {
-          event.preventDefault();
-          target.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      });
-    }
+  /* Hero primary button now links out to Facebook directly (no smooth scroll needed) */
   
     /* Mobile navigation toggle */
     if (navToggle && navLinks) {
