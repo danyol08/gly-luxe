@@ -2598,3 +2598,181 @@ html { scroll-padding-top: 72px; }
   .hero-card, .hero-float-stat { animation: none; }
   #gl-cursor, #gl-cursor-ring { display: none; }
 }
+
+/* ════════════════════════════════════════════════════
+   MOBILE PERFORMANCE — Kill expensive GPU ops on touch
+   All elegance preserved on desktop (pointer: fine)
+════════════════════════════════════════════════════ */
+
+@media (max-width: 768px), (pointer: coarse) {
+
+  /* 1. Kill ALL backdrop-filter — #1 GPU killer on mobile */
+  .site-header,
+  .hero-card-badge,
+  .cert-feat-ribbon,
+  .lightbox-backdrop,
+  .nav-links {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  /* Replace with solid equivalents */
+  .site-header { background: rgba(244,245,247,0.98) !important; }
+  .nav-links   { background: #f4f5f7 !important; }
+  .hero-card-badge { background: rgba(244,245,247,0.95) !important; }
+
+  /* 2. Kill ambient bg-orbs — filter:blur is costly when fixed */
+  .bg-orb { display: none !important; }
+
+  /* 3. Kill ALL infinite animations — drain battery & cause jank */
+  .hero-card,
+  .hero-float-stat          { animation: none !important; }
+  .eyebrow-dot              { animation: none !important; opacity: 0.5; }
+  .hero-scroll-hint         { animation: none !important; opacity: 0.7; }
+  .loader-logo-img          { animation: none !important; }
+  .hero-bg::after           { animation: none !important; display: none; }
+  .section-kicker           { animation: none !important;
+                               background: none !important;
+                               -webkit-text-fill-color: var(--text-soft) !important;
+                               color: var(--text-soft) !important; }
+
+  /* 4. Kill hero title blur — filter on animation is slow */
+  .hero-title-script {
+    animation: hero-title-mobile 0.8s cubic-bezier(0.16,1,0.3,1) 0.2s both !important;
+  }
+  @keyframes hero-title-mobile {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 5. Simplify hover box-shadows — don't transition shadows on mobile */
+  .stat-box:hover,
+  .eyelash-card:hover,
+  .cert-photo-card:hover,
+  .svc-panel:hover,
+  .at-work-item:hover,
+  .contact-card-link:hover,
+  .cert-mini:hover          { transform: none !important;
+                               box-shadow: var(--shadow-sm) !important; }
+
+  /* 6. Kill pseudo-element shimmer overlays — not visible on touch anyway */
+  .stat-box::before,
+  .about-img-wrap::after,
+  .map-iframe-wrap::after,
+  .cert-photo-card::after,
+  .eyelash-svc-card::after,
+  .social-pill::before,
+  .fsb::after               { display: none !important; }
+
+  /* 7. Kill mix-blend-mode on cursor (cursor hidden on mobile anyway) */
+  #gl-cursor, #gl-cursor-ring { display: none !important; }
+
+  /* 8. Simplify gallery — no scale transform on load */
+  .gallery-item img {
+    transform: none !important;
+    filter: none !important;
+  }
+  .gallery-item:hover img {
+    transform: scale(1.03) !important;
+    filter: none !important;
+  }
+
+  /* 9. Reduce reveal animation distance — less work for compositor */
+  .reveal        { transform: translateY(16px) !important; transition-duration: 0.5s !important; }
+  .reveal-left   { transform: translateX(-16px) !important; transition-duration: 0.5s !important; }
+  .reveal-right  { transform: translateX(16px) !important; transition-duration: 0.5s !important; }
+  .reveal-scale  { transform: scale(0.97) !important; transition-duration: 0.5s !important; }
+  .reveal-child  { transform: translateY(12px) !important; transition-duration: 0.45s !important; }
+
+  /* 10. Reduce stagger delays — feel snappier */
+  .stagger-parent.visible .reveal-child:nth-child(1) { transition-delay: 0s   !important; }
+  .stagger-parent.visible .reveal-child:nth-child(2) { transition-delay: 0.06s !important; }
+  .stagger-parent.visible .reveal-child:nth-child(3) { transition-delay: 0.12s !important; }
+  .stagger-parent.visible .reveal-child:nth-child(4) { transition-delay: 0.18s !important; }
+
+  /* 11. Hero subtitle stagger — faster on mobile */
+  .hero-title-word  { animation-duration: 0.6s !important; }
+  .hero-tagline     { animation-duration: 0.6s !important; animation-delay: 0.5s !important; }
+  .hero-text        { animation-duration: 0.6s !important; animation-delay: 0.6s !important; }
+  .hero-actions     { animation-duration: 0.6s !important; animation-delay: 0.7s !important; }
+  .hero-info-strip  { animation-duration: 0.6s !important; animation-delay: 0.8s !important; }
+
+  /* 12. Section title — remove gradient clip (slow on some Android) */
+  .section-title {
+    background: none !important;
+    -webkit-text-fill-color: var(--text-main) !important;
+    color: var(--text-main) !important;
+  }
+
+  /* 13. will-change only when actually needed */
+  * { will-change: auto !important; }
+  .reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-child {
+    will-change: opacity, transform;
+  }
+
+  /* 14. Lightbox blur — use dim instead */
+  .lightbox-backdrop {
+    background: rgba(10,8,6,0.85) !important;
+  }
+
+  /* 15. Hero bg parallax off — handled in JS too */
+  .hero-bg-img { transform: none !important; }
+}
+
+/* ─── Extra tiny phones ≤380px — even leaner ─── */
+@media (max-width: 380px) {
+  .hero-title-script { animation: none !important; opacity: 1 !important; }
+  .hero-title-word,
+  .hero-tagline,
+  .hero-text,
+  .hero-actions,
+  .hero-info-strip   { animation: none !important; opacity: 1 !important; }
+  .tab-panel.active .price-list li { animation: none !important; opacity: 1 !important; }
+  .gallery-grid.visible-grid .gallery-item { animation: none !important; opacity: 1 !important; }
+}
+
+/* ════════════════════════════════════════
+   MOBILE CAPTIONS — always visible on touch
+   (no hover on mobile so show captions by default)
+════════════════════════════════════════ */
+@media (pointer: coarse), (max-width: 768px) {
+
+  /* ── Gallery captions — always visible ── */
+  .gallery-item figcaption {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    background: linear-gradient(to top, rgba(17,17,17,0.65) 0%, transparent 100%);
+    padding: 1.2rem 0.85rem 0.7rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+  }
+
+  /* ── At Work captions — always visible ── */
+  .at-work-overlay {
+    opacity: 1 !important;
+    background: linear-gradient(to top, rgba(17,17,17,0.5), transparent 55%);
+  }
+  .at-work-caption {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
+  /* ── Cert photo overlay — replace hover with a small permanent badge ── */
+  .cert-photo-overlay {
+    opacity: 0 !important; /* keep hidden — tappable via lightbox anyway */
+  }
+  /* Add a small tap-to-view badge on cert photos instead */
+  .cert-photo-wrap::before {
+    content: "Tap to view";
+    position: absolute;
+    top: 0.6rem; right: 0.6rem;
+    z-index: 3;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(255,255,255,0.85);
+    background: rgba(17,17,17,0.45);
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    pointer-events: none;
+  }
+}

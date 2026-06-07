@@ -20,9 +20,10 @@ document.addEventListener("DOMContentLoaded", function () {
   setTimeout(hideLoader, 3200);
 
   /* ─────────────────────────────────────
-     CUSTOM CURSOR (desktop only)
+     CUSTOM CURSOR (desktop non-touch only)
   ───────────────────────────────────── */
-  var hasFineCursor = window.matchMedia("(pointer: fine)").matches;
+  var hasFineCursor = window.matchMedia("(pointer: fine)").matches
+                   && window.innerWidth > 768;
   if (hasFineCursor) {
     var cursor     = document.createElement("div");
     var cursorRing = document.createElement("div");
@@ -128,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   /* ─────────────────────────────────────
-     SCROLL REVEAL — directional variants
+     SCROLL REVEAL — with will-change management
   ───────────────────────────────────── */
   var allReveal = document.querySelectorAll(
     ".reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-child"
@@ -138,8 +139,15 @@ document.addEventListener("DOMContentLoaded", function () {
     var revealObs = new IntersectionObserver(function (entries, obs) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          obs.unobserve(entry.target);
+          var el = entry.target;
+          el.style.willChange = "opacity, transform";
+          el.classList.add("visible");
+          // Clean up will-change after animation to free GPU memory
+          el.addEventListener("transitionend", function cleanup() {
+            el.style.willChange = "auto";
+            el.removeEventListener("transitionend", cleanup);
+          });
+          obs.unobserve(el);
         }
       });
     }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
@@ -308,13 +316,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /* ─────────────────────────────────────
-     PARALLAX — subtle on hero image
+     PARALLAX — desktop only, never on touch
   ───────────────────────────────────── */
-  var heroBgImg = document.querySelector(".hero-bg-img");
-  if (heroBgImg && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  var heroBgImg  = document.querySelector(".hero-bg-img");
+  var isTouch    = window.matchMedia("(pointer: coarse)").matches;
+  var isMobile   = window.innerWidth <= 768;
+  var noMotion   = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (heroBgImg && !isTouch && !isMobile && !noMotion) {
     window.addEventListener("scroll", function () {
-      var y = window.scrollY;
-      heroBgImg.style.transform = "translateY(" + (y * 0.22) + "px)";
+      heroBgImg.style.transform = "translateY(" + (window.scrollY * 0.22) + "px)";
     }, { passive: true });
   }
 
