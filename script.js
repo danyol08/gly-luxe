@@ -20,10 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
   setTimeout(hideLoader, 3200);
 
   /* ─────────────────────────────────────
-     CUSTOM CURSOR (desktop non-touch only)
+     CUSTOM CURSOR (desktop only)
   ───────────────────────────────────── */
-  var hasFineCursor = window.matchMedia("(pointer: fine)").matches
-                   && window.innerWidth > 768;
+  var hasFineCursor = window.matchMedia("(pointer: fine)").matches;
   if (hasFineCursor) {
     var cursor     = document.createElement("div");
     var cursorRing = document.createElement("div");
@@ -129,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   /* ─────────────────────────────────────
-     SCROLL REVEAL — with will-change management
+     SCROLL REVEAL — directional variants
   ───────────────────────────────────── */
   var allReveal = document.querySelectorAll(
     ".reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-child"
@@ -139,15 +138,8 @@ document.addEventListener("DOMContentLoaded", function () {
     var revealObs = new IntersectionObserver(function (entries, obs) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          var el = entry.target;
-          el.style.willChange = "opacity, transform";
-          el.classList.add("visible");
-          // Clean up will-change after animation to free GPU memory
-          el.addEventListener("transitionend", function cleanup() {
-            el.style.willChange = "auto";
-            el.removeEventListener("transitionend", cleanup);
-          });
-          obs.unobserve(el);
+          entry.target.classList.add("visible");
+          obs.unobserve(entry.target);
         }
       });
     }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
@@ -316,16 +308,13 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /* ─────────────────────────────────────
-     PARALLAX — desktop only, never on touch
+     PARALLAX — subtle on hero image
   ───────────────────────────────────── */
-  var heroBgImg  = document.querySelector(".hero-bg-img");
-  var isTouch    = window.matchMedia("(pointer: coarse)").matches;
-  var isMobile   = window.innerWidth <= 768;
-  var noMotion   = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  if (heroBgImg && !isTouch && !isMobile && !noMotion) {
+  var heroBgImg = document.querySelector(".hero-bg-img");
+  if (heroBgImg && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     window.addEventListener("scroll", function () {
-      heroBgImg.style.transform = "translateY(" + (window.scrollY * 0.22) + "px)";
+      var y = window.scrollY;
+      heroBgImg.style.transform = "translateY(" + (y * 0.22) + "px)";
     }, { passive: true });
   }
 
